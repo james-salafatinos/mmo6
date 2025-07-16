@@ -310,6 +310,30 @@ export async function getActiveSessionsByUserId(userId) {
     }
 }
 
+/**
+ * Deactivate all sessions for a user
+ * @param {number} userId - User ID to deactivate sessions for
+ * @returns {Promise<boolean>} - Success status
+ */
+export async function deactivateSessionsByUserId(userId) {
+    const client = await pool.connect();
+    try {
+        console.log(`[/server/db/postgres.js - deactivateSessionsByUserId] Deactivating all sessions for user ${userId}`);
+        const query = {
+            text: 'UPDATE sessions SET is_active = FALSE WHERE user_id = $1',
+            values: [userId]
+        };
+        
+        await client.query(query);
+        return true;
+    } catch (err) {
+        console.error('[/server/db/postgres.js - deactivateSessionsByUserId] Error:', err);
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
 // Add session management to statements object
 statements.createSession = { run: createSession };
 statements.getSessionByToken = { get: getSessionByToken };

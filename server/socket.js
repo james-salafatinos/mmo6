@@ -1,8 +1,12 @@
 // Socket.IO server implementation
 import { Server } from 'socket.io';
+import { deactivateSessionsByUserId } from './db/postgres.js';
 
 // Active user sessions map (userId -> socketId)
 const activeSessions = new Map();
+
+// Store the Socket.IO server instance for external access
+let ioInstance;
 
 /**
  * Initialize Socket.IO server
@@ -12,6 +16,9 @@ const activeSessions = new Map();
 export function initSocketIO(httpServer) {
   console.log('[/server/socket.js - initSocketIO] Initializing Socket.IO server');
   const io = new Server(httpServer);
+  
+  // Store the io instance for external access
+  ioInstance = io;
   
   // Socket.IO connection handling
   io.on('connection', (socket) => {
@@ -59,17 +66,31 @@ export function initSocketIO(httpServer) {
         
         console.log(`[/server/socket.js - socket.authenticate] User ${userId} authenticated successfully`);
         socket.emit('authenticated', { success: true });
+        
+        // Broadcast updated user count to all connected clients
+        broadcastUserCount(io);
       }
     });
     
     // Handle disconnection
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
       if (socket.userId) {
         console.log(`[/server/socket.js - socket.disconnect] User ${socket.userId} disconnected`);
         
         // Only remove if this is the current socket for this user
         if (activeSessions.get(socket.userId) === socket.id) {
           activeSessions.delete(socket.userId);
+          
+          // Deactivate all sessions for this user in the database
+          try {
+            await deactivateSessionsByUserId(socket.userId);
+            console.log(`[/server/socket.js - socket.disconnect] Deactivated all sessions for user ${socket.userId}`);
+          } catch (error) {
+            console.error(`[/server/socket.js - socket.disconnect] Error deactivating sessions for user ${socket.userId}:`, error);
+          }
+          
+          // Broadcast updated user count to all connected clients
+          broadcastUserCount(io);
         }
       }
     });
@@ -82,6 +103,9 @@ export function initSocketIO(httpServer) {
         // Remove from active sessions
         if (activeSessions.get(socket.userId) === socket.id) {
           activeSessions.delete(socket.userId);
+          
+          // Broadcast updated user count to all connected clients
+          broadcastUserCount(io);
         }
       }
     });
@@ -96,4 +120,32 @@ export function initSocketIO(httpServer) {
  */
 export function getActiveSessions() {
   return activeSessions;
+}
+
+/**
+ * Get number of online users
+ * @returns {number} Number of online users
+ */
+export function getOnlineUserCount() {
+  return activeSessions.size;
+}
+
+/**
+ * Broadcast the current user count to all connected clients
+ * @param {Object} io - Socket.IO server instance
+ */
+function broadcastUserCount(io) {
+  const userCount = activeSessions.size;
+  console.log(`[/server/socket.js - broadcastUserCount] Broadcasting user count: ${userCount}`);
+  io.emit('user_count_update', { count: userCount });
+}
+
+/**
+ * Manually broadcast the current user count
+ * Can be called from external modules
+ */
+export function updateUserCount() {
+  if (ioInstance) {
+    broadcastUserCount(ioInstance);
+  }
 }

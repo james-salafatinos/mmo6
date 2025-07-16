@@ -53,6 +53,22 @@ body {
     color: #aaa;
 }
 
+/* Button styles */
+.btn-primary {
+    background-color: #e94560;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #d63553;
+}
+
 /* Chat filter tabs */
 #chat-filter-tabs {
     display: flex;

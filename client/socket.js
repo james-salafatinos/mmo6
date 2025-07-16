@@ -1,5 +1,6 @@
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 import { getCurrentUser, logout } from './js/auth/auth.js';
+import { updateUserCountDisplay } from './ui.js';
 
 // Create socket instance
 const socket = io();
@@ -34,6 +35,12 @@ socket.on('authenticated', (data) => {
 socket.on('authentication_error', (data) => {
     console.error('[/client/socket.js - authentication_error] Socket authentication failed:', data.message);
     isAuthenticated = false;
+});
+
+// Handle user count updates
+socket.on('user_count_update', (data) => {
+    console.log(`[/client/socket.js - user_count_update] Online users: ${data.count}`);
+    updateUserCountDisplay(data.count);
 });
 
 // Handle duplicate session detection
@@ -100,5 +107,7 @@ document.addEventListener('userLoggedOut', () => {
     isAuthenticated = false;
 });
 
-// Export socket and functions for use in other modules
+
+
+// Export socket instance and authentication function
 export { socket, authenticateSocket };
