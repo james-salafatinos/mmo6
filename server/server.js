@@ -1,14 +1,11 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import { createServer } from 'http';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createTables, dropAllTables } from './db/postgres.js';
 import createRouter from './routes/index.js';
-
-const port = 3000;
-// Load environment variables
-dotenv.config();
-
+import config from './config.js';
+import { initSocketIO } from './socket.js';
 
 // Get the directory name using ES modules approach
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +14,14 @@ const __dirname = dirname(__filename);
 // Initialize Express app
 const app = express();
 
-var server = app.listen(process.env.PORT || port, listen);
+// Create HTTP server
+const httpServer = createServer(app);
+
+// Initialize Socket.IO with our HTTP server
+const io = initSocketIO(httpServer);
+
+// Start the server
+const server = httpServer.listen(config.port, listen);
 
 
 // Set up middleware
@@ -50,19 +54,20 @@ function listen() {
   console.log("App listening at http://localhost:" + port);
 }
 
+if (config.database.dropAllTables) {
+  dropAllTables();
+}
 
-
-// dropAllTables();
-
-
-// Initialize database tables
-createTables()
-  .then(() => {
-    console.log('[/server/server.js - createTables] Database initialized');
-    // Start your server after database is ready
-    // ...
-  })
-  .catch(err => {
-    console.error('[/server/server.js - createTables] Failed to initialize database:', err);
-    process.exit(1);
-  });
+// Initialize database tables if enabled in config
+if (config.database.initializeTables) {
+  createTables()
+    .then(() => {
+      console.log('[/server/server.js - createTables] Database initialized');
+    })
+    .catch(err => {
+      console.error('[/server/server.js - createTables] Failed to initialize database:', err);
+      process.exit(1);
+    });
+} else {
+  console.log('[/server/server.js] Database table creation skipped - probably already exists (disabled in config)');
+}

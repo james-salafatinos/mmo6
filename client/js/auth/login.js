@@ -1,4 +1,6 @@
 // Login functionality
+import { setCurrentUser } from './auth.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
@@ -35,13 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Store user data in localStorage
-            localStorage.setItem('user', JSON.stringify(data.user));
+            // Store user data using auth module
+            console.log('[/client/js/auth/login.js - submit event handler] Setting current user:', data.user.username);
+            setCurrentUser(data.user);
             
             // Redirect to game
             window.location.href = '/';
         } catch (error) {
-            console.error('Login error:', error);
+            console.error('[/client/js/auth/login.js - submit event handler] Login error:', error);
             showError('An error occurred during login. Please try again.');
         }
     });

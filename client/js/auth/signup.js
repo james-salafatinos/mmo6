@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = '/login';
             }, 2000);
         } catch (error) {
-            console.error('Signup error:', error);
+            console.error('[/client/js/auth/signup.js - submit event handler] Signup error:', error);
             showError('An error occurred during signup. Please try again.');
         }
     });
