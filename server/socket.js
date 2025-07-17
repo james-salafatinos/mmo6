@@ -1,6 +1,7 @@
 // Socket.IO server implementation
 import { Server } from 'socket.io';
 import { deactivateSessionsByUserId } from './db/postgres.js';
+import { initAdminSocketHandlers } from './socket/admin.js';
 
 // Active user sessions map (userId -> socketId)
 const activeSessions = new Map();
@@ -66,6 +67,9 @@ export function initSocketIO(httpServer) {
         
         console.log(`[/server/socket.js - socket.authenticate] User ${userId} authenticated successfully`);
         socket.emit('authenticated', { success: true });
+        
+        // Initialize admin socket handlers
+        initAdminSocketHandlers(io, socket);
         
         // Broadcast updated user count to all connected clients
         broadcastUserCount(io);

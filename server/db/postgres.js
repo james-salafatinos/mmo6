@@ -14,8 +14,6 @@ const pool = new Pool({
     port: 5432,
 });
 
-//Keep commented as a utility for testing
-// dropAllTables();
 
 /**
  * Creates database tables if they don't exist
@@ -104,6 +102,30 @@ export async function getUserByUsername(username) {
         return result.rows[0] || null;
     } catch (err) {
         console.error('[/server/db/postgres.js - getUserByUsername] Error:', err);
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
+/**
+ * Get user by ID
+ * @param {string|number} userId - User ID to search for
+ * @returns {Promise<Object|null>} - User object or null if not found
+ */
+export async function getUserById(userId) {
+    const client = await pool.connect();
+    try {
+        const query = {
+            text: 'SELECT id, username, password_hash as password, created_at, last_login FROM users WHERE id = $1',
+            values: [userId]
+        };
+        
+        const result = await client.query(query);
+
+        return result.rows[0] || null;
+    } catch (err) {
+        console.error('[/server/db/postgres.js - getUserById] Error:', err);
         throw err;
     } finally {
         client.release();

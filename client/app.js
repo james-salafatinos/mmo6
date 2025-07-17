@@ -2,7 +2,7 @@
 import { initThreeJS, getScene, getCamera, render } from './three-setup.js';
 import { initAuth, isAuthenticated, getCurrentUser } from './js/auth/auth.js';
 import { socket, authenticateSocket } from './socket.js';
-import { setupLogoutButton } from './ui.js';
+import { initAdmin } from './js/admin.js';
 
 let sceneContainerId = 'scene-container';// Initialize modules
 
@@ -13,8 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (user) {
         console.log('[/client/app.js - DOMContentLoaded] User authenticated:', user.username);
         
-        // Set up logout button if we're on the index page
-        setupLogoutButton();
+        initAdmin();
     } else {
         console.log('[/client/app.js - DOMContentLoaded] No authenticated user');
         // Redirect to login if not on login page

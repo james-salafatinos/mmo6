@@ -4,10 +4,17 @@ mmo6/
 ├── client/
 │   ├── app.js
 │   ├── css/
+│   │   ├── admin.css
+│   │   ├── auth.css
 │   │   └── style.css
 │   ├── img/
 │   │   └── favicon.ico
 │   ├── js/
+│   │   ├── admin.js
+│   │   └── auth/
+│   │       ├── auth.js
+│   │       ├── login.js
+│   │       └── signup.js
 │   ├── modules/
 │   │   ├── FBXLoader.js
 │   │   ├── fflate.module.js
@@ -17,16 +24,29 @@ mmo6/
 │   │   ├── socket.esm.min.js
 │   │   ├── three.core.js
 │   │   └── three.module.js
+│   ├── socket.js
 │   ├── three-setup.js
+│   ├── ui.js
 │   └── views/
-│       └── index.html
+│       ├── index.html
+│       ├── login.html
+│       └── signup.html
 ├── filesystem-tree.txt
 ├── FileSystemToTextUtility.py
 ├── package-lock.json
 ├── package.json
 ├── README.md
 ├── server/
-│   └── server.js
+│   ├── config.js
+│   ├── db/
+│   │   └── postgres.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   └── index.js
+│   ├── scripts/
+│   │   └── clear-sessions.js
+│   ├── server.js
+│   └── socket.js
 └── shared/
     └── ecs/
         └── core/

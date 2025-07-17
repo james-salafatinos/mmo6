@@ -1,0 +1,337 @@
+/* Admin Modal and Panel Styles */
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    border: 1px solid #444;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    color: #e94560;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #e94560;
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background-color: #2a2a40;
+    color: #e6e6e6;
+    font-size: 0.9rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #e94560;
+    box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Admin Panel */
+.admin-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    height: 80%;
+    max-height: 600px;
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #444;
+}
+
+.admin-panel.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.admin-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #16213e;
+    border-bottom: 1px solid #444;
+    border-radius: 8px 8px 0 0;
+}
+
+.admin-panel-title {
+    font-size: 1.4rem;
+    color: #e94560;
+}
+
+.admin-panel-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.admin-panel-close:hover {
+    color: #e94560;
+}
+
+/* Admin Panel Tabs */
+.admin-panel-tabs {
+    display: flex;
+    background-color: #16213e;
+    border-bottom: 1px solid #444;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.admin-tab-btn {
+    padding: 12px 20px;
+    background-color: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    flex-shrink: 0;
+}
+
+.admin-tab-btn:hover {
+    color: #e6e6e6;
+    background-color: rgba(42, 42, 64, 0.3);
+}
+
+.admin-tab-btn.active {
+    color: #e94560;
+    border-bottom: 3px solid #e94560;
+    font-weight: bold;
+}
+
+.admin-panel-body {
+    flex: 1;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-tab-content {
+    display: none;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.admin-tab-content.active {
+    display: block;
+}
+
+.admin-panel-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.admin-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: rgba(42, 42, 64, 0.7);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-section-title {
+    font-size: 1.1rem;
+    color: #e94560;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #444;
+}
+
+/* Online Players List */
+.admin-players-count {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #aaa;
+    padding: 5px 0;
+    border-bottom: 1px solid #444;
+}
+
+.admin-player-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: #16213e;
+    border-radius: 6px;
+    border-left: 3px solid #e94560;
+}
+
+.admin-player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.admin-player-name {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.admin-player-status {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+.admin-player-status.online {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.admin-player-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.admin-player-detail {
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+.admin-player-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.admin-btn-sm {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.admin-no-players {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    font-style: italic;
+}
+
+.admin-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.admin-btn {
+    background-color: #2a2a40;
+    color: #e6e6e6;
+    border: 1px solid #444;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.admin-btn:hover {
+    background-color: #3a3a50;
+    border-color: #e94560;
+}
+
+.admin-btn-primary {
+    background-color: #e94560;
+    color: #fff;
+    border: none;
+}
+
+.admin-btn-primary:hover {
+    background-color: #d63553;
+}

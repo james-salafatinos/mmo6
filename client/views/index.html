@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMO6</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <link rel="icon" type="image/png" href="img/favicon.ico"/>
 
 </head>
@@ -16,6 +17,7 @@
             <div id="chat-header">
                 <h2>MMO6 - Play Now</h2>
                 <div id="user-count">0 users online</div>
+                <button id="admin-button" class="btn-primary">Admin</button>
                 <button id="logout-button" class="btn-primary">Logout</button>
             </div>
             <div id="chat-filter-tabs">
@@ -31,8 +33,107 @@
         </div>
     </div>
 
-    
-  
+    <!-- Admin Password Modal -->
+    <div id="admin-password-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Admin Authentication</h3>
+                <button class="modal-close" id="close-admin-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="admin-password">Enter Admin Password</label>
+                    <input type="password" id="admin-password" class="form-control" placeholder="Password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="submit-admin-password">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Admin Panel</h2>
+            <button class="admin-panel-close" id="close-admin-panel">&times;</button>
+        </div>
+        
+        <div class="admin-panel-tabs">
+            <button class="admin-tab-btn active" data-tab="teleport">Teleport</button>
+            <button class="admin-tab-btn" data-tab="xp">Award XP</button>
+            <button class="admin-tab-btn" data-tab="players">Online Players</button>
+            <button class="admin-tab-btn" data-tab="items">Spawn Items</button>
+            <button class="admin-tab-btn" data-tab="yell">Yell</button>
+        </div>
+        
+        <div class="admin-panel-body">
+            <!-- Teleport Players Section -->
+            <div class="admin-tab-content active" id="teleport-tab">
+                <div class="admin-section">
+                    <h3 class="admin-section-title">Teleport Players</h3>
+                    <div class="admin-controls">
+                        <select id="teleport-player" class="form-control">
+                            <option value="">Select Player</option>
+                        </select>
+                        <input type="number" id="teleport-x" class="admin-input" placeholder="X Position">
+                        <input type="number" id="teleport-y" class="admin-input" placeholder="Y Position">
+                        <input type="number" id="teleport-z" class="admin-input" placeholder="Z Position">
+                        <button class="admin-btn admin-btn-primary" id="teleport-button">Teleport</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Award XP Section -->
+            <div class="admin-tab-content" id="xp-tab">
+                <div class="admin-section">
+                    <h3 class="admin-section-title">Award XP</h3>
+                    <div class="admin-controls">
+                        <select id="xp-player" class="form-control">
+                            <option value="">Select Player</option>
+                        </select>
+                        <input type="number" id="xp-amount" class="admin-input" placeholder="XP Amount">
+                        <button class="admin-btn admin-btn-primary" id="award-xp-button">Award XP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Players Section -->
+            <div class="admin-tab-content" id="players-tab">
+                <div class="admin-section">
+                    <h3 class="admin-section-title">Online Players</h3>
+                    <div id="online-players-list">
+                        <!-- Players will be listed here dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spawn Items Section -->
+            <div class="admin-tab-content" id="items-tab">
+                <div class="admin-section">
+                    <h3 class="admin-section-title">Spawn Items</h3>
+                    <div class="admin-controls">
+                        <select id="item-type" class="form-control">
+                            <option value="">Select Item</option>
+                        </select>
+                        <input type="number" id="item-quantity" class="admin-input" placeholder="Quantity">
+                        <button class="admin-btn admin-btn-primary" id="spawn-item-button">Spawn</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yell in Chat Section -->
+            <div class="admin-tab-content" id="yell-tab">
+                <div class="admin-section">
+                    <h3 class="admin-section-title">Yell in Chat</h3>
+                    <div class="admin-controls">
+                        <input type="text" id="yell-message" class="form-control" placeholder="Message">
+                        <button class="admin-btn admin-btn-primary" id="yell-button">Yell</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Application scripts -->
     <script type="module" src="./app.js"></script>
