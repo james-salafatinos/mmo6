@@ -1,5 +1,5 @@
 // Login functionality
-import { setCurrentUser } from './auth.js';
+import { setCurrentUser } from '/client/js/auth/auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');

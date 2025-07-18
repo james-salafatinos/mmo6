@@ -2,6 +2,7 @@
 import { Server } from 'socket.io';
 import { deactivateSessionsByUserId } from './db/postgres.js';
 import { initAdminSocketHandlers } from './socket/admin.js';
+import { AUTH_EVENTS, SYSTEM_EVENTS } from '../shared/SocketEventDefinitions.js';
 
 // Active user sessions map (userId -> socketId)
 const activeSessions = new Map();
@@ -26,11 +27,11 @@ export function initSocketIO(httpServer) {
     console.log(`[/server/socket.js - socket.connection] New socket connection: ${socket.id}`);
     
     // Handle authentication
-    socket.on('authenticate', (data) => {
+    socket.on(AUTH_EVENTS.AUTHENTICATE, (data) => {
       const { userId, sessionToken } = data;
       
       if (!userId || !sessionToken) {
-        socket.emit('authentication_error', { message: 'Invalid authentication data' });
+        socket.emit(AUTH_EVENTS.AUTHENTICATION_ERROR, { message: 'Invalid authentication data' });
         return;
       }
       
@@ -49,14 +50,14 @@ export function initSocketIO(httpServer) {
         console.log(`[/server/socket.js - socket.authenticate] User ${userId} already has an active session`);
         
         // Notify the new connection that it's a duplicate
-        socket.emit('duplicate_session', { 
+        socket.emit(AUTH_EVENTS.DUPLICATE_SESSION, { 
           message: 'Your account is already logged in on another tab or browser'
         });
         
         // Optionally, we could also notify the existing connection
         const existingSocket = io.sockets.sockets.get(existingSocketId);
         if (existingSocket) {
-          existingSocket.emit('new_login_attempt', { 
+          existingSocket.emit(AUTH_EVENTS.NEW_LOGIN_ATTEMPT, { 
             message: 'Someone tried to log in to your account from another tab or browser'
           });
         }
@@ -66,7 +67,7 @@ export function initSocketIO(httpServer) {
         socket.userId = userId; // Store userId on the socket for later reference
         
         console.log(`[/server/socket.js - socket.authenticate] User ${userId} authenticated successfully`);
-        socket.emit('authenticated', { success: true });
+        socket.emit(AUTH_EVENTS.AUTHENTICATED, { success: true });
         
         // Initialize admin socket handlers
         initAdminSocketHandlers(io, socket);
@@ -77,7 +78,7 @@ export function initSocketIO(httpServer) {
     });
     
     // Handle disconnection
-    socket.on('disconnect', async () => {
+    socket.on(SYSTEM_EVENTS.DISCONNECT, async () => {
       if (socket.userId) {
         console.log(`[/server/socket.js - socket.disconnect] User ${socket.userId} disconnected`);
         
@@ -100,7 +101,7 @@ export function initSocketIO(httpServer) {
     });
     
     // Handle logout
-    socket.on('logout', () => {
+    socket.on(AUTH_EVENTS.LOGOUT, () => {
       if (socket.userId) {
         console.log(`[/server/socket.js - socket.logout] User ${socket.userId} logged out`);
         
@@ -141,7 +142,7 @@ export function getOnlineUserCount() {
 function broadcastUserCount(io) {
   const userCount = activeSessions.size;
   console.log(`[/server/socket.js - broadcastUserCount] Broadcasting user count: ${userCount}`);
-  io.emit('user_count_update', { count: userCount });
+  io.emit(SYSTEM_EVENTS.USER_COUNT_UPDATE, { count: userCount });
 }
 
 /**

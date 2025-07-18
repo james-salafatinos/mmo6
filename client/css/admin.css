@@ -97,6 +97,44 @@
     box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
 }
 
+/* Admin input elements */
+.admin-input,
+.admin-input[type="number"],
+.admin-input[type="text"],
+.admin-input[type="password"],
+.admin-input[type="email"] {
+    background-color: #1a1a2e;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-input:focus {
+    border-color: #e94560;
+    box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+    outline: none;
+}
+
+/* Ensure select elements in admin panels match the theme */
+.admin-controls select {
+    background-color: #1a1a2e;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
+.admin-controls select:focus {
+    border-color: #e94560;
+    box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+    outline: none;
+}
+
 .modal-footer {
     display: flex;
     justify-content: flex-end;

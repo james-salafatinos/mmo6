@@ -1,8 +1,8 @@
 // Main application entry point
-import { initThreeJS, getScene, getCamera, render } from './three-setup.js';
-import { initAuth, isAuthenticated, getCurrentUser } from './js/auth/auth.js';
-import { socket, authenticateSocket } from './socket.js';
-import { initAdmin } from './js/admin.js';
+import { initThreeJS, getScene, getCamera, render } from '/client/three-setup.js';
+import { initAuth, isAuthenticated, getCurrentUser } from '/client/js/auth/auth.js';
+import { socket, authenticateSocket } from '/client/socket.js';
+import { initAdmin } from '/client/js/admin.js';
 
 let sceneContainerId = 'scene-container';// Initialize modules
 

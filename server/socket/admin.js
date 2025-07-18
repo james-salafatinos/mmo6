@@ -3,6 +3,7 @@
  */
 import { getActiveSessions } from '../socket.js';
 import { getUserById } from '../db/postgres.js';
+import { ADMIN_EVENTS, PLAYER_EVENTS, CHAT_EVENTS } from '../../shared/SocketEventDefinitions.js';
 
 /**
  * Initialize admin socket event handlers
@@ -13,7 +14,7 @@ export function initAdminSocketHandlers(io, socket) {
     console.log(`[/server/socket/admin.js - initAdminSocketHandlers] Initializing admin socket handlers for socket ${socket.id}`);
     
     // Get online players with detailed information
-    socket.on('admin:getOnlinePlayers', async () => {
+    socket.on(ADMIN_EVENTS.GET_ONLINE_PLAYERS, async () => {
         console.log(`[/server/socket/admin.js - admin:getOnlinePlayers] Getting online players for admin`);
         
         try {
@@ -43,16 +44,16 @@ export function initAdminSocketHandlers(io, socket) {
             }
             
             // Send online players to admin
-            socket.emit('admin:onlinePlayers', { players: onlinePlayers });
+            socket.emit(ADMIN_EVENTS.ONLINE_PLAYERS, { players: onlinePlayers });
             
         } catch (err) {
             console.error('[/server/socket/admin.js - admin:getOnlinePlayers] Error:', err);
-            socket.emit('admin:error', { message: 'Failed to get online players' });
+            socket.emit(ADMIN_EVENTS.ERROR, { message: 'Failed to get online players' });
         }
     });
     
     // Teleport player
-    socket.on('admin:teleportPlayer', (data) => {
+    socket.on(ADMIN_EVENTS.TELEPORT_PLAYER, (data) => {
         console.log(`[/server/socket/admin.js - admin:teleportPlayer] Teleporting player ${data.playerId} to position:`, data.position);
         
         try {
@@ -61,24 +62,24 @@ export function initAdminSocketHandlers(io, socket) {
             
             if (targetSocketId) {
                 // Notify the target player they are being teleported
-                io.to(targetSocketId).emit('player:teleport', {
+                io.to(targetSocketId).emit(PLAYER_EVENTS.TELEPORT, {
                     position,
                     message: 'You have been teleported by an admin'
                 });
                 
                 // Confirm to admin
-                socket.emit('admin:success', { message: `Player ${playerId} teleported successfully` });
+                socket.emit(ADMIN_EVENTS.SUCCESS, { message: `Player ${playerId} teleported successfully` });
             } else {
                 socket.emit('admin:error', { message: 'Player not found or offline' });
             }
         } catch (err) {
             console.error('[/server/socket/admin.js - admin:teleportPlayer] Error:', err);
-            socket.emit('admin:error', { message: 'Failed to teleport player' });
+            socket.emit(ADMIN_EVENTS.ERROR, { message: 'Failed to teleport player' });
         }
     });
     
     // Award XP to player
-    socket.on('admin:awardXP', (data) => {
+    socket.on(ADMIN_EVENTS.AWARD_XP, (data) => {
         console.log(`[/server/socket/admin.js - admin:awardXP] Awarding ${data.amount} XP to player ${data.playerId}`);
         
         try {
@@ -87,71 +88,55 @@ export function initAdminSocketHandlers(io, socket) {
             
             if (targetSocketId) {
                 // Notify the target player they received XP
-                io.to(targetSocketId).emit('player:xpAwarded', {
+                io.to(targetSocketId).emit(PLAYER_EVENTS.XP_AWARDED, {
                     amount,
                     message: `You have been awarded ${amount} XP by an admin`
                 });
                 
                 // Confirm to admin
-                socket.emit('admin:success', { message: `Awarded ${amount} XP to player ${playerId}` });
+                socket.emit(ADMIN_EVENTS.SUCCESS, { message: `Awarded ${amount} XP to player ${playerId}` });
             } else {
                 socket.emit('admin:error', { message: 'Player not found or offline' });
             }
         } catch (err) {
             console.error('[/server/socket/admin.js - admin:awardXP] Error:', err);
-            socket.emit('admin:error', { message: 'Failed to award XP' });
+            socket.emit(ADMIN_EVENTS.ERROR, { message: 'Failed to award XP' });
         }
     });
     
     // Spawn item
-    socket.on('admin:spawnItem', (data) => {
+    socket.on(ADMIN_EVENTS.SPAWN_ITEM, (data) => {
         console.log(`[/server/socket/admin.js - admin:spawnItem] Spawning item ${data.itemType} x${data.quantity}`);
         
         try {
             // Implementation would depend on game mechanics
             // For now, just notify admin of success
-            socket.emit('admin:success', { 
+            socket.emit(ADMIN_EVENTS.SUCCESS, { 
                 message: `Spawned ${data.quantity} x ${data.itemType}`
             });
         } catch (err) {
             console.error('[/server/socket/admin.js - admin:spawnItem] Error:', err);
-            socket.emit('admin:error', { message: 'Failed to spawn item' });
+            socket.emit(ADMIN_EVENTS.ERROR, { message: 'Failed to spawn item' });
         }
     });
     
     // Admin yell (broadcast message to all players)
-    socket.on('admin:yell', (data) => {
+    socket.on(ADMIN_EVENTS.YELL, (data) => {
         console.log(`[/server/socket/admin.js - admin:yell] Broadcasting admin message: ${data.message}`);
         
         try {
             // Broadcast to all connected clients
-            io.emit('chat:adminMessage', {
+            io.emit(CHAT_EVENTS.ADMIN_MESSAGE, {
                 message: data.message,
                 sender: 'ADMIN'
             });
             
             // Confirm to admin
-            socket.emit('admin:success', { message: 'Message broadcast successfully' });
+            socket.emit(ADMIN_EVENTS.SUCCESS, { message: 'Message broadcast successfully' });
         } catch (err) {
             console.error('[/server/socket/admin.js - admin:yell] Error:', err);
-            socket.emit('admin:error', { message: 'Failed to broadcast message' });
+            socket.emit(ADMIN_EVENTS.ERROR, { message: 'Failed to broadcast message' });
         }
     });
 }
 
-/**
- * Helper function to find a socket by user ID
- * @param {Object} io - Socket.IO server instance
- * @param {string} userId - User ID to find
- * @returns {Object|null} Socket object or null if not found
- */
-function findSocketByUserId(io, userId) {
-    const activeSessions = getActiveSessions();
-    const socketId = activeSessions.get(userId);
-    
-    if (socketId) {
-        return io.sockets.sockets.get(socketId) || null;
-    }
-    
-    return null;
-}

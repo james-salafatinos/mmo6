@@ -26,6 +26,7 @@ const server = httpServer.listen(config.port, listen);
 
 // Set up middleware
 app.use(express.static(join(__dirname, '../client')));
+app.use('/shared', express.static(join(__dirname, '../shared')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

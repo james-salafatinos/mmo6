@@ -1,8 +1,9 @@
 /**
  * UI.js - Handles UI-related functionality
  */
-import { logout } from './js/auth/auth.js';
-import { socket } from './socket.js';
+import { logout } from '/client/js/auth/auth.js';
+import { socket } from '/client/socket.js';
+import { AUTH_EVENTS } from '/shared/SocketEventDefinitions.js';
 
 /**
  * Update the user count display in the UI
@@ -30,7 +31,7 @@ export function setupLogoutButton() {
                 // First, disconnect the socket to prevent duplicate tab issues
                 if (socket && socket.connected) {
                     console.log('[/client/js/ui.js - logoutButton.click] Disconnecting socket');
-                    socket.emit('logout');
+                    socket.emit(AUTH_EVENTS.LOGOUT);
                 }
                 
                 // Then perform the actual logout through auth.js

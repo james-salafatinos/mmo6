@@ -1,6 +1,7 @@
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
-import { getCurrentUser, logout } from './js/auth/auth.js';
-import { updateUserCountDisplay } from './ui.js';
+import { getCurrentUser, logout } from '/client/js/auth/auth.js';
+import { updateUserCountDisplay } from '/client/ui.js';
+import { AUTH_EVENTS, SYSTEM_EVENTS } from '/shared/SocketEventDefinitions.js';
 
 // Create socket instance
 const socket = io();
@@ -10,7 +11,7 @@ let isConnected = false;
 let isAuthenticated = false;
 
 // Connect to the server
-socket.on('connect', () => {
+socket.on(SYSTEM_EVENTS.CONNECT, () => {
     console.log('[/client/socket.js - connect] Connected to server');
     isConnected = true;
     
@@ -19,32 +20,32 @@ socket.on('connect', () => {
 });
 
 // Handle disconnection
-socket.on('disconnect', () => {
+socket.on(SYSTEM_EVENTS.DISCONNECT, () => {
     console.log('[/client/socket.js - disconnect] Disconnected from server');
     isConnected = false;
     isAuthenticated = false;
 });
 
 // Handle authentication success
-socket.on('authenticated', (data) => {
+socket.on(AUTH_EVENTS.AUTHENTICATED, (data) => {
     console.log('[/client/socket.js - authenticated] Socket authenticated successfully');
     isAuthenticated = true;
 });
 
 // Handle authentication error
-socket.on('authentication_error', (data) => {
+socket.on(AUTH_EVENTS.AUTHENTICATION_ERROR, (data) => {
     console.error('[/client/socket.js - authentication_error] Socket authentication failed:', data.message);
     isAuthenticated = false;
 });
 
 // Handle user count updates
-socket.on('user_count_update', (data) => {
+socket.on(SYSTEM_EVENTS.USER_COUNT_UPDATE, (data) => {
     console.log(`[/client/socket.js - user_count_update] Online users: ${data.count}`);
     updateUserCountDisplay(data.count);
 });
 
 // Handle duplicate session detection
-socket.on('duplicate_session', (data) => {
+socket.on(AUTH_EVENTS.DUPLICATE_SESSION, (data) => {
     console.warn('[/client/socket.js - duplicate_session] Duplicate session detected:', data.message);
     
     // Show alert to user
@@ -56,7 +57,7 @@ socket.on('duplicate_session', (data) => {
 });
 
 // Handle new login attempt notification
-socket.on('new_login_attempt', (data) => {
+socket.on(AUTH_EVENTS.NEW_LOGIN_ATTEMPT, (data) => {
     console.warn('[/client/socket.js - new_login_attempt] New login attempt detected:', data.message);
     
     // Optionally show notification to user
@@ -86,7 +87,7 @@ function authenticateSocket() {
     }
     
     console.log('[/client/socket.js - authenticateSocket] Authenticating socket for user:', user.id);
-    socket.emit('authenticate', {
+    socket.emit(AUTH_EVENTS.AUTHENTICATE, {
         userId: user.id,
         sessionToken: user.sessionToken
     });
@@ -102,7 +103,7 @@ document.addEventListener('userLoggedIn', () => {
 document.addEventListener('userLoggedOut', () => {
     console.log('[/client/socket.js - userLoggedOut] User logged out, notifying server');
     if (isConnected) {
-        socket.emit('logout');
+        socket.emit(AUTH_EVENTS.LOGOUT);
     }
     isAuthenticated = false;
 });

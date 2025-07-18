@@ -1,7 +1,8 @@
 /**
  * Admin.js - Handles admin panel functionality
  */
-import { socket } from '../socket.js';
+import { socket } from '/client/socket.js';
+import { ADMIN_EVENTS } from '/shared/SocketEventDefinitions.js';
 
 // Admin password - in a real app, this would be handled securely on the server
 const ADMIN_PASSWORD = 'admin123'; // Simple hardcoded password for MVP
@@ -134,7 +135,7 @@ function setupAdminPanelEventListeners() {
         
         if (playerId && !isNaN(x) && !isNaN(y) && !isNaN(z)) {
             console.log(`[/client/js/admin.js - teleportButton.click] Teleporting player ${playerId} to (${x}, ${y}, ${z})`);
-            socket.emit('admin:teleport', { playerId, position: { x, y, z } });
+            socket.emit(ADMIN_EVENTS.TELEPORT, { playerId, position: { x, y, z } });
         }
     });
     
@@ -145,7 +146,7 @@ function setupAdminPanelEventListeners() {
         
         if (playerId && !isNaN(amount)) {
             console.log(`[/client/js/admin.js - awardXpButton.click] Awarding ${amount} XP to player ${playerId}`);
-            socket.emit('admin:awardXp', { playerId, amount });
+            socket.emit(ADMIN_EVENTS.AWARD_XP_ALT, { playerId, amount });
         }
     });
     
@@ -156,7 +157,7 @@ function setupAdminPanelEventListeners() {
         
         if (itemType) {
             console.log(`[/client/js/admin.js - spawnItemButton.click] Spawning ${quantity} of item ${itemType}`);
-            socket.emit('admin:spawnItem', { itemType, quantity });
+            socket.emit(ADMIN_EVENTS.SPAWN_ITEM, { itemType, quantity });
         }
     });
     
@@ -166,7 +167,7 @@ function setupAdminPanelEventListeners() {
         
         if (message) {
             console.log(`[/client/js/admin.js - yellButton.click] Yelling: ${message}`);
-            socket.emit('admin:yell', { message });
+            socket.emit(ADMIN_EVENTS.YELL, { message });
         }
     });
 }
@@ -226,7 +227,7 @@ function hideAdminPanel() {
  */
 function updateOnlinePlayersList() {
     console.log('[/client/js/admin.js - updateOnlinePlayersList] Requesting online players');
-    socket.emit('admin:getOnlinePlayers');
+    socket.emit(ADMIN_EVENTS.GET_ONLINE_PLAYERS);
 }
 
 /**
@@ -285,10 +286,7 @@ export function handleOnlinePlayers(data) {
                 <div class="admin-player-detail"><strong>XP:</strong> ${player.xp || 0}</div>
                 <div class="admin-player-detail"><strong>Last Login:</strong> ${lastLoginDisplay}</div>
             </div>
-            <div class="admin-player-actions">
-                <button class="admin-btn admin-btn-sm" onclick="teleportToPlayer('${player.id}')">Teleport To</button>
-                <button class="admin-btn admin-btn-sm" onclick="awardXpToPlayer('${player.id}')">Award XP</button>
-            </div>
+          
         `;
         onlinePlayersList.appendChild(playerElement);
     });
@@ -331,17 +329,14 @@ function awardXpToPlayer(playerId) {
 }
 
 // Set up socket event listeners for admin functionality
-socket.on('admin:onlinePlayers', handleOnlinePlayers);
-socket.on('admin:success', (data) => {
+socket.on(ADMIN_EVENTS.ONLINE_PLAYERS, handleOnlinePlayers);
+socket.on(ADMIN_EVENTS.SUCCESS, (data) => {
     console.log(`[/client/js/admin.js - admin:success] ${data.message}`);
     alert(`Success: ${data.message}`);
 });
 
-socket.on('admin:error', (data) => {
+socket.on(ADMIN_EVENTS.ERROR, (data) => {
     console.error(`[/client/js/admin.js - admin:error] ${data.message}`);
     alert(`Error: ${data.message}`);
 });
 
-// Make helper functions available globally for the onclick handlers
-window.teleportToPlayer = teleportToPlayer;
-window.awardXpToPlayer = awardXpToPlayer;
