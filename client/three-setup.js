@@ -46,15 +46,6 @@ export function initThreeJS(containerId) {
     const axesHelper = new THREE.AxesHelper(2);
     scene.add(axesHelper);
     
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-    
-    // Add directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1);
-    scene.add(directionalLight);
-    
     // Handle window resize
     window.addEventListener('resize', onWindowResize);
     

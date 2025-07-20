@@ -1,3 +1,5 @@
+import { Entity } from './entity.js';
+
 /**
  * World Class
  * The world manages entities and systems
@@ -7,6 +9,16 @@ export class World {
         this.entities = [];
         this.systems = [];
         this.lastUpdateTime = 0;
+    }
+
+    /**
+     * Create a new entity and add it to this world
+     * @returns {Entity} The created entity
+     */
+    createEntity() {
+        const entity = new Entity();
+        this.entities.push(entity);
+        return entity;
     }
 
     /**
@@ -96,6 +108,18 @@ export class World {
         ) || null;
     }
     
+    /**
+     * Get entities with a specific component type
+     * @param {Function} ComponentType - Component constructor function
+     * @returns {Array<Entity>} - Array of entities having that component
+     */
+    getEntitiesWithComponent(ComponentType) {
+        const componentName = ComponentType.name;
+        return this.entities.filter(entity => 
+            entity.active && entity.hasComponent(componentName)
+        );
+    }
+
     /**
      * Find entities that have all the specified component types
      * @param {Array<Function>} componentTypes - Array of component constructor functions

@@ -1,10 +1,12 @@
 // Main application entry point
-import { initThreeJS, getScene, getCamera, render } from '/client/three-setup.js';
+import { initThreeJS, getScene, getCamera, getRenderer, render } from '/client/three-setup.js';
 import { initAuth, isAuthenticated, getCurrentUser } from '/client/js/auth/auth.js';
 import { socket, authenticateSocket } from '/client/socket.js';
 import { initAdmin } from '/client/js/admin.js';
+import { GameManager } from '/client/js/GameManager.js';
 
-let sceneContainerId = 'scene-container';// Initialize modules
+let sceneContainerId = 'scene-container';
+let gameManager = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Initialize authentication
@@ -27,10 +29,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     initThreeJS(sceneContainerId);
     const scene = getScene();
     const camera = getCamera();
+    const renderer = getRenderer();
+
+    // Initialize Game Manager
+    gameManager = new GameManager(scene, camera, renderer);
+    await gameManager.init();
+
+    console.log('[app.js] Game initialized successfully');
 
     // Render loop
-    function animate() {
+    function animate(currentTime) {
         requestAnimationFrame(animate);
+        
+        // Update game logic
+        if (gameManager) {
+            gameManager.update(currentTime);
+        }
+        
         render();
     }
     animate();

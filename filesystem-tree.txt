@@ -46,12 +46,15 @@ mmo6/
 │   ├── scripts/
 │   │   └── clear-sessions.js
 │   ├── server.js
+│   ├── socket/
+│   │   └── admin.js
 │   └── socket.js
 └── shared/
-    └── ecs/
-        └── core/
-            ├── component.js
-            ├── entity.js
-            ├── index.js
-            ├── system.js
-            └── world.js
+    ├── ecs/
+    │   └── core/
+    │       ├── component.js
+    │       ├── entity.js
+    │       ├── index.js
+    │       ├── system.js
+    │       └── world.js
+    └── SocketEventDefinitions.js
