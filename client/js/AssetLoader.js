@@ -1,8 +1,8 @@
 /**
  * AssetLoader - Manages loading of 3D models and other game assets
  */
-import * as THREE from '/client/modules/three.module.js';
-import { GLTFLoader } from '/client/modules/GLTFLoader.js';
+import * as THREE from '/shared/modules/three.module.js ';
+import { GLTFLoader } from '/shared/modules/GLTFLoader.js';
 
 export class AssetLoader {
     constructor() {

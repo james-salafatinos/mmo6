@@ -5,7 +5,7 @@ import { World } from '/shared/ecs/core/index.js';
 import { ChunkSystem } from '/shared/ecs/systems/ChunkSystem.js';
 import { RenderSystem } from '/shared/ecs/systems/RenderSystem.js';
 import { assetLoader } from './AssetLoader.js';
-
+import * as THREE from '/shared/modules/three.module.js ';
 export class GameManager {
     constructor(scene, camera, renderer) {
         this.scene = scene;
@@ -26,8 +26,9 @@ export class GameManager {
         // Initialize systems
         this.world.init();
         
-        // Player position (for chunk loading)
-        this.playerPosition = { x: 0, y: 0, z: 0 };
+        // Setup lighting
+        this.setupLighting();
+        
         
         console.log('[GameManager] Initialized with ECS systems');
     }
@@ -37,9 +38,7 @@ export class GameManager {
      */
     async init() {
         console.log('[GameManager] Loading initial chunks...');
-        
-        // Update chunk system with player position
-        this.chunkSystem.updatePlayerPosition(this.playerPosition.x, this.playerPosition.z);
+
         
         // Load initial chunks around origin (0,0)
         const initialChunks = [
@@ -62,6 +61,20 @@ export class GameManager {
         }
     }
 
+    setupLighting() {
+        // Add ambient light
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+        this.scene.add(ambientLight);
+
+        // Add directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 10, 5);
+        directionalLight.castShadow = true;
+        this.scene.add(directionalLight);
+
+        console.log('[GameManager] Lighting setup complete');
+    }
+
     /**
      * Update the game world
      * @param {number} currentTime - Current time in milliseconds
@@ -74,34 +87,6 @@ export class GameManager {
         this.world.update(timeInSeconds);
     }
 
-    /**
-     * Update player position (for chunk loading)
-     * @param {number} x - Player X position
-     * @param {number} y - Player Y position  
-     * @param {number} z - Player Z position
-     */
-    updatePlayerPosition(x, y, z) {
-        this.playerPosition.x = x;
-        this.playerPosition.y = y;
-        this.playerPosition.z = z;
-        
-        // Update chunk system
-        this.chunkSystem.updatePlayerPosition(x, z);
-    }
 
-    /**
-     * Get the ECS world instance
-     * @returns {World}
-     */
-    getWorld() {
-        return this.world;
-    }
-
-    /**
-     * Get chunk system reference
-     * @returns {ChunkSystem}
-     */
-    getChunkSystem() {
-        return this.chunkSystem;
-    }
+ 
 }

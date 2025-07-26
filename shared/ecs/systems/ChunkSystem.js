@@ -3,7 +3,8 @@
  */
 import { System } from '../core/system.js';
 import { ChunkComponent } from '../components/ChunkComponent.js';
-import { PositionComponent } from '../components/PositionComponent.js';
+
+import { TransformComponent } from '../components/TransformComponent.js';
 import { RenderComponent } from '../components/RenderComponent.js';
 
 export class ChunkSystem extends System {
@@ -22,15 +23,6 @@ export class ChunkSystem extends System {
         ]);
     }
 
-    /**
-     * Update the player position for chunk loading calculations
-     * @param {number} x - Player X position
-     * @param {number} z - Player Z position
-     */
-    updatePlayerPosition(x, z) {
-        this.playerPosition.x = x;
-        this.playerPosition.z = z;
-    }
 
     /**
      * Get chunk coordinates from world position
@@ -69,10 +61,11 @@ export class ChunkSystem extends System {
             const chunkComponent = new ChunkComponent(chunkX, chunkZ);
             entity.addComponent(chunkComponent);
             
-            // Add position component
+            // Add transform component
             const worldPos = chunkComponent.getWorldPosition();
-            const positionComponent = new PositionComponent(worldPos.x, 0, worldPos.z);
-            entity.addComponent(positionComponent);
+            const transformComponent = new TransformComponent();
+            transformComponent.setPosition(worldPos.x, 0, worldPos.z);
+            entity.addComponent(transformComponent);
             
             // Load the 3D model
             const model = await this.assetLoader.loadModel(
@@ -133,44 +126,6 @@ export class ChunkSystem extends System {
      * @param {number} deltaTime
      */
     update(deltaTime) {
-        const playerChunk = this.getChunkCoords(
-            this.playerPosition.x, 
-            this.playerPosition.z
-        );
-
-        // Determine which chunks should be loaded
-        const chunksToLoad = [];
-        for (let x = playerChunk.x - this.loadDistance; x <= playerChunk.x + this.loadDistance; x++) {
-            for (let z = playerChunk.z - this.loadDistance; z <= playerChunk.z + this.loadDistance; z++) {
-                const chunkKey = `${x},${z}`;
-                // Only load chunks that are available and not already loaded
-                if (this.availableChunks.has(chunkKey) && !this.chunkEntities.has(chunkKey)) {
-                    chunksToLoad.push({ x, z });
-                }
-            }
-        }
-
-        // Load new chunks
-        chunksToLoad.forEach(chunk => {
-            this.loadChunk(chunk.x, chunk.z);
-        });
-
-        // Unload distant chunks
-        const chunksToUnload = [];
-        this.chunkEntities.forEach((entity, chunkKey) => {
-            const [x, z] = chunkKey.split(',').map(Number);
-            const distance = Math.max(
-                Math.abs(x - playerChunk.x),
-                Math.abs(z - playerChunk.z)
-            );
-            
-            if (distance > this.unloadDistance) {
-                chunksToUnload.push({ x, z });
-            }
-        });
-
-        chunksToUnload.forEach(chunk => {
-            this.unloadChunk(chunk.x, chunk.z);
-        });
+    
     }
 }

@@ -3,7 +3,7 @@
  */
 import { System } from '../core/system.js';
 import { RenderComponent } from '../components/RenderComponent.js';
-import { PositionComponent } from '../components/PositionComponent.js';
+import { TransformComponent } from '../components/TransformComponent.js';
 
 export class RenderSystem extends System {
     constructor(scene) {
@@ -20,14 +20,14 @@ export class RenderSystem extends System {
         
         entities.forEach(entity => {
             const renderComponent = entity.getComponent(RenderComponent);
-            const positionComponent = entity.getComponent(PositionComponent);
+            const transformComponent = entity.getComponent(TransformComponent);
             
-            if (renderComponent && renderComponent.object3D && positionComponent) {
+            if (renderComponent && renderComponent.object3D && transformComponent) {
                 // Sync position
                 renderComponent.object3D.position.set(
-                    positionComponent.x,
-                    positionComponent.y,
-                    positionComponent.z
+                    transformComponent.position.x,
+                    transformComponent.position.y,
+                    transformComponent.position.z
                 );
             }
         });

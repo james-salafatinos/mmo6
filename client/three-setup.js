@@ -1,6 +1,6 @@
 // Three.js initialization and setup
-import * as THREE from '/client/modules/three.module.js';
-import { OrbitControls } from '/client/modules/OrbitControls.js';
+import * as THREE from '/shared/modules/three.module.js ';
+import { OrbitControls } from '/shared/modules/OrbitControls.js';
 
 // Module variables
 let scene, camera, renderer, controls;

@@ -9,7 +9,7 @@ import {
 	Plane,
 	Ray,
 	MathUtils
-} from '/client/modules/three.module.js';
+} from '/shared/modules/three.module.js ';
 
 /**
  * Fires when the camera has been transformed by the controls.

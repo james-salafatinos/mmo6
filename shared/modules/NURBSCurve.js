@@ -2,8 +2,8 @@ import {
 	Curve,
 	Vector3,
 	Vector4
-} from '/client/modules/three.module.js';
-import * as NURBSUtils from '/client/modules/NURBSUtils.js';
+} from '/shared/modules/three.module.js ';
+import * as NURBSUtils from '/shared/modules/NURBSUtils.js';
 
 /**
  * This class represents a NURBS curve.
