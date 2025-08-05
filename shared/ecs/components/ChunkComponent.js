@@ -40,6 +40,6 @@ export class ChunkComponent extends Component {
      * @returns {string}
      */
     getAssetPath() {
-        return `/client/models/chunks/${this.getChunkKey()}.glb`;
+        return `/shared/models/chunks/${this.getChunkKey()}.glb`;
     }
 }

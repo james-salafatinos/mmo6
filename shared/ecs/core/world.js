@@ -47,6 +47,7 @@ export class World {
      * @param {System} system - The system to register
      */
     registerSystem(system) {
+        system.world = this; // Set world reference on system
         this.systems.push(system);
     }
 
@@ -56,6 +57,8 @@ export class World {
     init() {
         // Initialize all systems
         for (const system of this.systems) {
+            // Ensure world reference is set
+            system.world = this;
             if (system.init) {
                 system.init(this);
             }
@@ -118,6 +121,15 @@ export class World {
         return this.entities.filter(entity => 
             entity.active && entity.hasComponent(componentName)
         );
+    }
+
+    /**
+     * Alias for getEntitiesWithComponent for convenience
+     * @param {Function} ComponentType - Component constructor function
+     * @returns {Array<Entity>} - Array of entities having that component
+     */
+    getEntitiesWith(ComponentType) {
+        return this.getEntitiesWithComponent(ComponentType);
     }
 
     /**

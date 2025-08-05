@@ -1,6 +1,14 @@
 Directory tree for: C:\Users\james\OneDrive\Desktop\repos\mmo6
 ──────────────────────────────────────────────────────────────
 mmo6/
+├── blender/
+│   ├── Chunk_-1_-1.glb
+│   ├── Chunk_-1_1.glb
+│   ├── Chunk_1_-1.glb
+│   ├── Chunk_1_1.glb
+│   ├── test_chunk.blend
+│   ├── test_chunk.blend1
+│   └── world.blend
 ├── client/
 │   ├── app.js
 │   ├── css/
@@ -11,19 +19,26 @@ mmo6/
 │   │   └── favicon.ico
 │   ├── js/
 │   │   ├── admin.js
-│   │   └── auth/
-│   │       ├── auth.js
-│   │       ├── login.js
-│   │       └── signup.js
-│   ├── modules/
-│   │   ├── FBXLoader.js
-│   │   ├── fflate.module.js
-│   │   ├── NURBSCurve.js
-│   │   ├── NURBSUtils.js
-│   │   ├── OrbitControls.js
-│   │   ├── socket.esm.min.js
-│   │   ├── three.core.js
-│   │   └── three.module.js
+│   │   ├── AssetLoader.js
+│   │   ├── auth/
+│   │   │   ├── auth.js
+│   │   │   ├── login.js
+│   │   │   └── signup.js
+│   │   ├── GameManager.js
+│   │   └── systems/
+│   ├── models/
+│   │   ├── character/
+│   │   │   ├── dance.fbx
+│   │   │   ├── idle.fbx
+│   │   │   ├── model.fbx
+│   │   │   ├── run.fbx
+│   │   │   └── walk.fbx
+│   │   └── chunks/
+│   │       ├── Chunk_-1_-1.glb
+│   │       ├── Chunk_-1_1.glb
+│   │       ├── Chunk_1_-1.glb
+│   │       ├── Chunk_1_1.glb
+│   │       └── README.md
 │   ├── socket.js
 │   ├── three-setup.js
 │   ├── ui.js
@@ -51,10 +66,33 @@ mmo6/
 │   └── socket.js
 └── shared/
     ├── ecs/
-    │   └── core/
-    │       ├── component.js
-    │       ├── entity.js
-    │       ├── index.js
-    │       ├── system.js
-    │       └── world.js
+    │   ├── components/
+    │   │   ├── CharacterComponent.js
+    │   │   ├── ChunkComponent.js
+    │   │   ├── InputComponent.js
+    │   │   ├── MovementComponent.js
+    │   │   ├── RenderComponent.js
+    │   │   └── TransformComponent.js
+    │   ├── core/
+    │   │   ├── component.js
+    │   │   ├── entity.js
+    │   │   ├── index.js
+    │   │   ├── system.js
+    │   │   └── world.js
+    │   └── systems/
+    │       ├── CharacterSystem.js
+    │       ├── ChunkSystem.js
+    │       ├── InputSystem.js
+    │       └── RenderSystem.js
+    ├── modules/
+    │   ├── BufferGeometryUtils.js
+    │   ├── FBXLoader.js
+    │   ├── fflate.module.js
+    │   ├── GLTFLoader.js
+    │   ├── NURBSCurve.js
+    │   ├── NURBSUtils.js
+    │   ├── OrbitControls.js
+    │   ├── socket.esm.min.js
+    │   ├── three.core.js
+    │   └── three.module.js
     └── SocketEventDefinitions.js
